@@ -1,9 +1,10 @@
-import web, requests, json
+import os, web, requests, json
 from requests import Request, Session
 from pymongo import MongoClient
 
 urls = (
-            '/', 'handler'
+            '/', 'handler',
+            '/test', 'test'
             )
 app = web.application(urls, globals())
 
@@ -11,7 +12,7 @@ class handler:
   def GET(self):
     data = web.input()
     print data
-    #response = self._send_sms(data['sender'], data['text'])
+    response = self._send_sms(data.sender, data.text)
     self._persist(data)
     return 'Thank you for notifying us!'
 
@@ -46,6 +47,12 @@ class handler:
     messages = db.messages
     message_id = messages.insert(data)
 
+class test:
+  def GET(self):
+    return web.input()
 
-if __name__ == "__main__":
-  app.run()
+def is_test():
+    if 'WEBPY_ENV' in os.environ:
+        return os.environ['WEBPY_ENV'] == 'test'
+
+if (not is_test()) and __name__ == "__main__": app.run()

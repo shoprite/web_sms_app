@@ -14,7 +14,7 @@ class handler:
     print data
     response = self._send_sms(data.sender, data.text)
     self._persist(data)
-    return 'Thank you for notifying us!'
+    return response.content
 
   def _send_sms(self, dest, msg):
     request = requests.Request('POST',

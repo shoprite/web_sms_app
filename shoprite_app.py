@@ -9,6 +9,13 @@ urls = (
 app = web.application(urls, globals())
 
 class handler:        
+  LOGIN = None
+  PWD = None
+
+  def __init__(self):
+    self.getCredentials()
+
+
   def GET(self):
     data = web.input()
     print data
@@ -23,8 +30,8 @@ class handler:
     request.headers = { 'content-type' : 'application/json' }
     json_obj = {
         'authentication' : {
-          'username' : 'test',
-          'password' : 'test'
+          'username' : self.LOGIN,
+          'password' : self.PWD
           },
         'messages'      : {
           'sender'    : 'Shoprite',
@@ -40,6 +47,11 @@ class handler:
     # send the request
     s = Session()
     return s.send(request.prepare())
+  
+  def getCredentials(self):
+    f = open('login.cred', 'r')
+    self.LOGIN, self.PWD = f.read().split(':')
+
 
   def _persist(self, data):
     client = MongoClient()
@@ -47,12 +59,9 @@ class handler:
     messages = db.messages
     message_id = messages.insert(data)
 
-class test:
-  def GET(self):
-    return web.input()
-
 def is_test():
     if 'WEBPY_ENV' in os.environ:
         return os.environ['WEBPY_ENV'] == 'test'
+
 
 if (not is_test()) and __name__ == "__main__": app.run()

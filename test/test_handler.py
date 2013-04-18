@@ -2,8 +2,8 @@ import subprocess
 import os
 from web import utils
 from nose.tools import *
-from shoprite_app import app 
-from shoprite_app import handler
+from shoprite_app import app, handler 
+import shoprite_app
 import requests, json
 
 from paste.fixture import TestApp
@@ -71,5 +71,11 @@ class TestHandler:
     assert_equal(json_obj['results'][0]['status'], '0')
     assert_equal(json_obj['results'][0]['destination'], self.dest)
     assert_not_equal(json_obj['results'][0]['messageid'], '')
+
+  def test_can_retrieve_infobip_credentials(self):
+    h = handler()
+    h.getCredentials()
+    assert_is_not_none(h.LOGIN)
+    assert_is_not_none(h.PWD)
   
 

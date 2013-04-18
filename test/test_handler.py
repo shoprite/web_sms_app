@@ -19,6 +19,6 @@ class TestHandler:
   @with_setup(__start_server, __stop_server)
   def test_get_reponse(self):
     r = app.request('/')
-    assert_equal(r.data,'Received')
+    assert_equal(r.data,'Message successfully received and saved')
 
 

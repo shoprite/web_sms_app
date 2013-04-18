@@ -1,16 +1,44 @@
-import web
+import web, requests, json
+from requests import Request, Session
 from pymongo import MongoClient
 
 urls = (
-            '/(.*)', 'handler'
+            '/', 'handler'
             )
 app = web.application(urls, globals())
 
 class handler:        
-  def GET(self, sender='', receiver='', text='', timestamp=''):
+  def GET(self):
     data = web.input()
+    print data
+    #response = self._send_sms(data['sender'], data['text'])
     self._persist(data)
-    return 'Message successfully received and saved'
+    return 'Thank you for notifying us!'
+
+  def _send_sms(self, dest, msg):
+    request = requests.Request('POST',
+        'http://api.infobip.com/api/v3/sendsms/json')
+
+    request.headers = { 'content-type' : 'application/json' }
+    json_obj = {
+        'authentication' : {
+          'username' : 'test',
+          'password' : 'test'
+          },
+        'messages'      : {
+          'sender'    : 'Shoprite',
+          'text'      : 'Thank you for notifying us!',
+          'recipients': [
+            { 'gsm' : '27827824665' }
+            ]
+          } # close messages
+        } # close json_obj
+
+    request.data = json.dumps(json_obj)
+
+    # send the request
+    s = Session()
+    return s.send(request.prepare())
 
   def _persist(self, data):
     client = MongoClient()

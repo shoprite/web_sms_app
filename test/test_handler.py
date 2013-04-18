@@ -26,14 +26,20 @@ class TestHandler:
   dest = '27827824665'
   msg = 'Wheres my nappies?'
 
-  def setup(self):
-    middleware = []
-    self.testApp = TestApp(app.wsgifunc(*middleware))
+  def __start_server(self):
+    app.run()
 
-  def test_get_request(self):
+  def __stop_server(self):
+    del app
 
-    response = self.testApp.get('/?sender=me&text=bleh', headers={'Content-Type': 'application/json'})
-    assert_equal(response.status, 200)
+  # def setup(self):
+  #   middleware = []
+  #   self.testApp = TestApp(app.wsgifunc(*middleware))
+
+  # def test_get_request(self):
+
+  #   response = self.testApp.get('/?sender=me&text=bleh', headers={'Content-Type': 'application/json'})
+  #   assert_equal(response.status, 200)
 
   # @with_setup(__start_server, __stop_server)
   # def test_get_reponse(self):
@@ -52,18 +58,18 @@ class TestHandler:
   #   assert_equal(r.data, 'Thank you for notifying us!')
 
 
-  # @with_setup(__start_server, __stop_server)
-  # def test_sms_host_reachable(self):
-  #   req = handler()._send_sms(self.dest, self.msg)
-  #   assert_equal(req.status_code, 200)
+  @with_setup(__start_server, __stop_server)
+  def test_sms_host_reachable(self):
+    req = handler()._send_sms(self.dest, self.msg)
+    assert_equal(req.status_code, 200)
     
-  # @with_setup(__start_server, __stop_server)
-  # def test_sms_send_successful(self):
-  #   req = handler()._send_sms(self.dest, self.msg)
-  #   json_obj = json.loads(req.content)
+  @with_setup(__start_server, __stop_server)
+  def test_sms_send_successful(self):
+    req = handler()._send_sms(self.dest, self.msg)
+    json_obj = json.loads(req.content)
 
-  #   assert_equal(json_obj['results'][0]['status'], '0')
-  #   assert_equal(json_obj['results'][0]['destination'], self.dest)
-  #   assert_not_equal(json_obj['results'][0]['messageid'], '')
+    assert_equal(json_obj['results'][0]['status'], '0')
+    assert_equal(json_obj['results'][0]['destination'], self.dest)
+    assert_not_equal(json_obj['results'][0]['messageid'], '')
   
 

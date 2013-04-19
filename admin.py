@@ -1,11 +1,17 @@
 import web
 from pymongo import MongoClient
+from web.contrib.template import render_jinja
 
-urls = ('/', 'index')
+urls = ('/*', 'index')
+
+render = render_jinja(
+	'templates',
+	encoding='utf-8')
 
 class index:
 	def GET(self):
-		pass
+		records = self._get_records()
+		return render.index(records=records)
 
 	def _get_records(self):
 		client = MongoClient()

@@ -1,0 +1,24 @@
+<html>
+<head>
+	<title>Customer Messages - Admin</title>
+</head>
+<body>
+	<h1>Customer Messages</h1>
+	<table>
+		<tr>
+			<th>Customer Number</th>
+			<th>Product</th>
+			<th>Shop</th>
+			<th>Date & Time</th>
+		</tr>
+	{% for record in records %}
+		<tr>
+			<td>{{ record.customer_number}}</td>
+			<td>{{ record.product_name }}</td>
+			<td>{{ record.shop_name }}</td>
+			<td>{{ record.timestamp }}</td>
+		</tr>
+	{% endfor %}
+	</table>
+</body>
+</html>

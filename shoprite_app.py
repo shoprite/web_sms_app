@@ -1,4 +1,4 @@
-import web, admin, utils, extras
+import web, admin, extras
 from extras import utils
 
 urls = (

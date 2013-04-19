@@ -1,4 +1,4 @@
-import web, random, utils, extras
+import web, random, extras
 from pymongo import MongoClient
 from web.contrib.template import render_jinja
 from extras import utils

@@ -59,10 +59,10 @@ class utils:
     f = open('login.cred', 'r')
     self.LOGIN, self.PWD = f.read().replace('\n','').split(':')
 
-  def _persist(self, data):
+  def _persist(self, data, table='messages'):
     client = MongoClient()
     db = client.shoprite_db
-    messages = db.messages
+    messages = getattr(db, table)
     return messages.insert(data)
 
   def is_valid_sms(self, msg):

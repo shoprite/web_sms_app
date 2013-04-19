@@ -107,13 +107,14 @@ class TestHandler:
 
   def test_can_persist_records_to_database(self):
     test_data = {
-      'customer_no' : '0827824665',
+      'customer_number' : '0827824665',
       'timestamp'   : '2013-04-27 10:33:16',
       'product_name': 'Test Product',
-      'shop_name'   : 'Test Shop'
+      'shop_name'   : 'Test Shop',
+      'notified'    : False
     }
 
-    record_id = utils()._persist(test_data)
+    record_id = utils()._persist(test_data, 'messages_test')
     assert_is_not_none(record_id)
 
     

@@ -2,10 +2,12 @@ import os, web, requests, json
 from requests import Request, Session
 from pymongo import MongoClient
 import re
+import admin
 
 urls = (
             '/', 'handler',
-            '/test', 'test'
+            '/test', 'test',
+            '/admin', admin.app_admin
             )
 app = web.application(urls, globals())
 
@@ -33,27 +35,38 @@ class handler:
 
 
   def GET(self):
-    data = web.input() 
-    message = clean_sms(data.text)
-    if not is_valid_sms(message):
+    data = web.input() # ?sender=0845678910&text=64353264&timestamp=2013-04-17%20203 
+    print data
+    message = self.clean_sms(data.text)
+    if not self.is_valid_sms(message):
       return
     
-    product_code = message[0:2]
-    shop_code = message[3:]
+    shop_code = message[:3]
+    product_code = message[3:]
 
-    product_code = None
+    product_name = None
     shop_name = None
 
     try:
-      product_name = products[product_code]
-      shop_name = shops[shop_code]
+      product_name = self.products[product_code]
+      shop_name = self.shops[shop_code]
+
     except:
       return
 
-    message = 'Thanks for your input! You sent {0} @ {1}' % (product_name, shop_name)
+    message = 'Thanks for your input! You sent %s @ %s' % (product_name, shop_name)
+    print message
 
     response = self._send_sms(data.sender, message)
-    self._persist(data)
+    print response
+
+    record = {
+      'customer_number' : data.sender,
+      'timestamp'       : data.timestamp,
+      'product_name'    : product_name,
+      'shop_name'       : shop_name
+    }
+    self._persist(record)
     return response.content
 
   def _send_sms(self, dest, message):
@@ -91,7 +104,7 @@ class handler:
     client = MongoClient()
     db = client.shoprite_db
     messages = db.messages
-    message_id = messages.insert(data)
+    return messages.insert(data)
 
   def is_valid_sms(self, msg):
     regex = r'^\d{3}[\s]*\d{5}$'

@@ -5,6 +5,7 @@ from nose.tools import *
 from shoprite_app import app, handler 
 import shoprite_app
 import requests, json
+import admin
 
 from paste.fixture import TestApp
 
@@ -98,4 +99,21 @@ class TestHandler:
     shop_code = '535'
     shop_name = handler.shops[shop_code]
     assert_equal(shop_name, 'Randburg')
+
+  def test_can_retrieve_records_from_database(self):
+    records = admin.index()._get_records()
+    assert_is_not_none(records)
+
+  def test_can_persist_records_to_database(self):
+    test_data = {
+      'customer_no' : '0827824665',
+      'timestamp'   : '2013-04-27 10:33:16',
+      'product_name': 'Test Product',
+      'shop_name'   : 'Test Shop'
+    }
+
+    record_id = handler()._persist(test_data)
+    assert_is_not_none(record_id)
+
+    
 

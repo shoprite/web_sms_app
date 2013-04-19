@@ -31,7 +31,7 @@ class notify:
 		print data
 		product_code = data.product_code
 		shop_code = data.shop_code
-		self.send_notification(shop_code, product_code)
+		return self.send_notification(shop_code, product_code)
 
 	def send_notification(self, shop_code, product_code):
 		client = MongoClient()
@@ -41,6 +41,7 @@ class notify:
 		loyalty_code = self.generate_loyalty_code() # need to generate IN loop
 		message = '%s is back in stock @ %s. Your loyalty code is %s' % (product_name, shop_name, loyalty_code)
 		utils()._send_sms([m['customer_number'] for m in affected_messges], message )
+		return message
 
 	def generate_loyalty_code(self):
 		return random.randrange(100000, 999999)

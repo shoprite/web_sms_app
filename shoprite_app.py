@@ -1,4 +1,4 @@
-import web, admin, utils
+import web, admin, utils, extras
 from extras import utils
 
 urls = (
@@ -25,12 +25,15 @@ class handler:
     product_name = None
     shop_name = None
 
+    print product_code
+    print shop_code
+
     try:
       product_name = extras.products[product_code]
       shop_name = extras.shops[shop_code]
 
     except:
-      return
+      return 'Invalid product or shop code'
 
     message = 'Thanks for your input! You sent %s @ %s' % (product_name, shop_name)
     

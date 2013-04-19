@@ -89,3 +89,13 @@ class TestHandler:
     clean_message = handler().clean_sms(message)
     assert_true(handler().is_valid_sms(clean_message))
 
+  def test_product_name_can_be_retrieved_from_product_code(self):
+    product_code = '98997'
+    product_name = handler.products[product_code]
+    assert_equal(product_name, 'Pepsi')
+
+  def test_can_retrieve_shop_from_shop_code(self):
+    shop_code = '535'
+    shop_name = handler.shops[shop_code]
+    assert_equal(shop_name, 'Randburg')
+

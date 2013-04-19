@@ -13,18 +13,50 @@ class handler:
   LOGIN = None
   PWD = None
 
+  products = {
+              '43298':'Orange Jam',
+              '53264':'Huggies Nappies',
+              '78568':'Coffee Mug',
+              '82584':'Disposable Nakpins L/S',
+              '98997':'Pepsi'
+    }
+
+  shops = {
+              '535':'Randburg',
+              '643':'Braamfontein Annex B',
+              '941':'Rosebank',
+              '853':'Linden'
+    }
+
   def __init__(self):
     self.get_credentials()
 
 
   def GET(self):
-    data = web.input()
-    print data
-    response = self._send_sms(data.sender, data.text)
+    data = web.input() 
+    message = clean_sms(data.text)
+    if not is_valid_sms(message):
+      return
+    
+    product_code = message[0:2]
+    shop_code = message[3:]
+
+    product_code = None
+    shop_name = None
+
+    try:
+      product_name = products[product_code]
+      shop_name = shops[shop_code]
+    except:
+      return
+
+    message = 'Thanks for your input! You sent {0} @ {1}' % (product_name, shop_name)
+
+    response = self._send_sms(data.sender, message)
     self._persist(data)
     return response.content
 
-  def _send_sms(self, dest, msg):
+  def _send_sms(self, dest, message):
     request = requests.Request('POST',
         'http://api.infobip.com/api/v3/sendsms/json')
 
@@ -36,7 +68,7 @@ class handler:
           },
         'messages'      : {
           'sender'    : 'Shoprite',
-          'text'      : 'Thank you for notifying us!',
+          'text'      : message,
           'recipients': [
             { 'gsm' : '27827824665' }
             ]
@@ -44,6 +76,7 @@ class handler:
         } # close json_obj
 
     request.data = json.dumps(json_obj)
+    print (request.data)
 
     # send the request
     s = Session()

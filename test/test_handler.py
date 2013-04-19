@@ -74,8 +74,18 @@ class TestHandler:
 
   def test_can_retrieve_infobip_credentials(self):
     h = handler()
-    h.getCredentials()
+    h.get_credentials()
     assert_is_not_none(h.LOGIN)
     assert_is_not_none(h.PWD)
-  
+
+  def test_clean_message(self):
+    msg1 = '234 5546'
+    msg2 = '3532 4254 463 62346'
+    assert_equal(handler().clean_sms(msg1), '2345546')
+    assert_equal(handler().clean_sms(msg2), '3532425446362346')
+
+  def test_sms_is_valid(self):
+    message = '203 89896'
+    clean_message = handler().clean_sms(message)
+    assert_true(handler().is_valid_sms(clean_message))
 

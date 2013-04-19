@@ -1,6 +1,7 @@
 import os, web, requests, json
 from requests import Request, Session
 from pymongo import MongoClient
+import re
 
 urls = (
             '/', 'handler',
@@ -13,7 +14,7 @@ class handler:
   PWD = None
 
   def __init__(self):
-    self.getCredentials()
+    self.get_credentials()
 
 
   def GET(self):
@@ -48,9 +49,9 @@ class handler:
     s = Session()
     return s.send(request.prepare())
   
-  def getCredentials(self):
+  def get_credentials(self):
     f = open('login.cred', 'r')
-    self.LOGIN, self.PWD = f.read().split(':')
+    self.LOGIN, self.PWD = f.read().replace('\n','').split(':')
 
 
   def _persist(self, data):
@@ -58,6 +59,13 @@ class handler:
     db = client.shoprite_db
     messages = db.messages
     message_id = messages.insert(data)
+
+  def is_valid_sms(self, msg):
+    regex = r'^\d{3}[\s]*\d{5}$'
+    return re.match(regex, msg) is not None
+
+  def clean_sms(self, msg):
+    return msg.replace(' ','')
 
 def is_test():
     if 'WEBPY_ENV' in os.environ:

@@ -1,11 +1,12 @@
 import subprocess
 import os
-from web import utils
 from nose.tools import *
 from shoprite_app import app, handler 
 import shoprite_app
 import requests, json
 import admin
+from extras import utils
+import extras
 
 from paste.fixture import TestApp
 
@@ -61,12 +62,12 @@ class TestHandler:
 
   @with_setup(__start_server, __stop_server)
   def test_sms_host_reachable(self):
-    req = handler()._send_sms(self.dest, self.msg)
+    req = utils()._send_sms([self.dest], self.msg)
     assert_equal(req.status_code, 200)
     
   @with_setup(__start_server, __stop_server)
   def test_sms_send_successful(self):
-    req = handler()._send_sms(self.dest, self.msg)
+    req = utils()._send_sms([self.dest], self.msg)
     json_obj = json.loads(req.content)
 
     assert_equal(json_obj['results'][0]['status'], '0')
@@ -74,7 +75,7 @@ class TestHandler:
     assert_not_equal(json_obj['results'][0]['messageid'], '')
 
   def test_can_retrieve_infobip_credentials(self):
-    h = handler()
+    h = utils()
     h.get_credentials()
     assert_is_not_none(h.LOGIN)
     assert_is_not_none(h.PWD)
@@ -82,22 +83,22 @@ class TestHandler:
   def test_clean_message(self):
     msg1 = '234 5546'
     msg2 = '3532 4254 463 62346'
-    assert_equal(handler().clean_sms(msg1), '2345546')
-    assert_equal(handler().clean_sms(msg2), '3532425446362346')
+    assert_equal(utils().clean_sms(msg1), '2345546')
+    assert_equal(utils().clean_sms(msg2), '3532425446362346')
 
   def test_sms_is_valid(self):
     message = '203 89896'
-    clean_message = handler().clean_sms(message)
-    assert_true(handler().is_valid_sms(clean_message))
+    clean_message = utils().clean_sms(message)
+    assert_true(utils().is_valid_sms(clean_message))
 
   def test_product_name_can_be_retrieved_from_product_code(self):
     product_code = '98997'
-    product_name = handler.products[product_code]
+    product_name = extras.products[product_code]
     assert_equal(product_name, 'Pepsi')
 
   def test_can_retrieve_shop_from_shop_code(self):
     shop_code = '535'
-    shop_name = handler.shops[shop_code]
+    shop_name = extras.shops[shop_code]
     assert_equal(shop_name, 'Randburg')
 
   def test_can_retrieve_records_from_database(self):
@@ -112,7 +113,7 @@ class TestHandler:
       'shop_name'   : 'Test Shop'
     }
 
-    record_id = handler()._persist(test_data)
+    record_id = utils()._persist(test_data)
     assert_is_not_none(record_id)
 
     

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Notify Customers{% endblock %}
+{% block content %}
+<form method="POST">
+	<table>
+		<tr>
+			<td>Shop Code:</td>
+			<td><input type='text' name='shop_code' class='width: 300px' maxlength=3/></td>
+		</tr>
+		<tr>
+			<td>Product Code:</td>
+			<td><input type='text' name='product_code' class='width: 300px' maxlength=5/></td>
+		</tr>
+		<tr>
+			<td>&nbsp</td>
+			<td><input type='submit' name='Notify'/></td>
+		</tr>
+	</table>
+</form>
+{% endblock %}

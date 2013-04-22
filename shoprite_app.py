@@ -6,7 +6,8 @@ urls = (
             '/test', 'test',
             '/admin', admin.app_admin
             )
-app = web.application(urls, globals())
+app = web.application(urls, globals()).wsgifunc()
+application = app
 
 class handler:        
 

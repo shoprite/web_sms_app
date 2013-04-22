@@ -1,4 +1,4 @@
-import re, requests, json
+import re, requests, json, os
 from pymongo import MongoClient
 from requests import Request, Session
 
@@ -56,7 +56,8 @@ class utils:
     return s.send(request.prepare())
 
   def get_credentials(self):
-    f = open('login.cred', 'r')
+    root = os.path.dirname(__file__)
+    f = open(os.path.join(root,'login.cred'), 'r')
     self.LOGIN, self.PWD = f.read().replace('\n','').split(':')
 
   def _persist(self, data, table='messages'):

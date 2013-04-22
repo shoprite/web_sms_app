@@ -2,8 +2,7 @@ import web, admin, extras
 from extras import utils
 
 urls = (
-            '/', 'handler',
-            '/test', 'test',
+            '/?', 'handler',
             '/admin', admin.app_admin
             )
 app = web.application(urls, globals()).wsgifunc()

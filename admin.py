@@ -3,8 +3,8 @@ from pymongo import MongoClient
 from web.contrib.template import render_jinja
 from extras import utils
 
-urls = ('/*', 'index',
-		'/notify', 'notify'
+urls = ('/?', 'index',
+		'/notify/?', 'notify'
 	)
 
 render = render_jinja(
@@ -14,7 +14,6 @@ render = render_jinja(
 class index:
 	def GET(self):
 		records = self._get_records()
-		print '****' , records.count()
 		return render.index(records=records)
 
 	def _get_records(self):

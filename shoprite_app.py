@@ -14,7 +14,11 @@ class handler:
 
   def GET(self):
     data = web.input() # ?sender=0845678910&text=64353264&timestamp=2013-04-17%20203 
-    print data
+    
+    if not self._is_valid_request(data):
+      web.header('Content-Type', 'text/plain')
+      raise web.badrequest('Invalid request')
+
     message = utils().clean_sms(data.text)
     if not utils().is_valid_sms(message):
       return
@@ -24,9 +28,6 @@ class handler:
 
     product_name = None
     shop_name = None
-
-    print product_code
-    print shop_code
 
     try:
       product_name = extras.products[product_code]
@@ -47,6 +48,9 @@ class handler:
     }
     utils()._persist(record)
     return response.content
+
+  def _is_valid_request(self, request_data):
+    return request_data.has_key('sender') and request_data.has_key('text') and request_data.has_key('timestamp')
 
 
 if __name__ == "__main__": app.run()

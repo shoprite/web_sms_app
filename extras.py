@@ -34,8 +34,6 @@ class utils:
     for rec in dest:
       recipients.append({'gsm' : rec})
     
-    print message
-
     json_obj = {
         'authentication' : {
           'username' : self.LOGIN,
@@ -49,7 +47,6 @@ class utils:
         } # close json_obj
 
     request.data = json.dumps(json_obj)
-    print (request.data)
 
     # send the request
     s = Session()

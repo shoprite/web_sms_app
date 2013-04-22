@@ -1,4 +1,4 @@
-import web, random, extras
+import web, random, extras, os
 from pymongo import MongoClient
 from web.contrib.template import render_jinja
 from extras import utils
@@ -8,7 +8,7 @@ urls = ('/*', 'index',
 	)
 
 render = render_jinja(
-	'templates',
+  os.path.join(os.path.dirname(__file__),'templates'),
 	encoding='utf-8')
 
 class index:

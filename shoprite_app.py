@@ -7,6 +7,7 @@ urls = (
             '/admin', admin.app_admin
             )
 app = web.application(urls, globals())
+application = app
 
 class handler:        
 

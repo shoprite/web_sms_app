@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Customer Messages - Admin{% endblock %}
-{% block content %}
-	<h1>Customer Messages</h1>
-	<table>
+{% block heading %}Customer Messages - Admin{% endblock %}
+{% block content %} 
+	<table class="table table-bordered table-striped table-hover">
 		<tr>
 			<th>Customer Number</th>
 			<th>Product</th>
@@ -11,14 +11,13 @@
 			<th>Notified</th>
 		</tr>
 	{% for record in records %}
-		<tr>
+		<tr {% if record.notified %} class="success" {% endif %}>
 			<td>{{ record.customer_number}}</td>
 			<td>{{ record.product_name }}</td>
 			<td>{{ record.shop_name }}</td>
 			<td>{{ record.timestamp }}</td>
 			<td>{{ record.notified }}</td>
 		</tr>
-	{% endfor %}
-		<tr><td>&nbsp</td><td>&nbsp</td><td>&nbsp</td><td>&nbsp</td><td>&nbsp</td></tr>
+	{% endfor %} 
 	</table>
 {% endblock %}

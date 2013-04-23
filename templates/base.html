@@ -1,10 +1,75 @@
-<html>
-<head>
+<!DOCTYPE html>
+<!-- saved from url=(0038)http://localhost:8080/static/try.html# -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <!-- Le styles -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 20px;
+        padding-bottom: 60px;
+      }
+
+      /* Custom container */
+      .container {
+        margin: 0 auto;
+        max-width: 1000px;
+        vertical-align: middle;
+      }
+      .container > hr {
+        margin: 60px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        margin: 80px 0;
+        text-align: center;
+      }
+      .jumbotron h1 {
+        font-size: 100px;
+        line-height: 1;
+      }
+
+      .container-height{
+        min-height: 600px;
+      }
+
+
+    </style>  
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+ 
 	<title>{% block title %}{% endblock %}</title>
 </head>
-<body>
-	<div style='padding: 100px'>
-		{% block content %}{% endblock %}
-	</div>
-</body>
+  <body>
+
+    <div class="container">
+      <!-- Jumbotron -->
+      <div class="jumbotron">
+        <h1>Proof Of Concept</h1>
+      </div>
+
+      <hr>
+
+      <!-- Example row of columns -->
+      <div class="row-fluid container-height">
+        <div class="span10">
+          <h2>{% block heading %}{% endblock%}</h2>
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="footer">
+        <p>© ThoughtWorks 2013</p>
+      </div>
+
+    </div> <!-- /container -->
+  </body>
 </html>

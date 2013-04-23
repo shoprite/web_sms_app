@@ -12,8 +12,8 @@
 	{% for record in records %}
 		<tr {% if record.notified %} class="success" {% endif %}>
 			<td>{{ record.customer_number}}</td>
-			<td>{{ record.product_name }}</td>
-			<td>{{ record.shop_name }}</td>
+			<td>{{ record.product_code }}</td>
+			<td>{{ record.shop_code }}</td>
 			<td>{{ record.timestamp }}</td>
 			<td>{{ record.notified }}</td>
 		</tr>

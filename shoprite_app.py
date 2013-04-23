@@ -1,4 +1,4 @@
-import web, admin, extras
+import web, admin, extras, sys
 from extras import utils
 from models import products, shops
 
@@ -28,11 +28,11 @@ class handler:
     shop_name = None
 
     try:
-      product_name = products().get(product_code).product_name
-      shop_name = shops().get(shop_code).shop_name
+      product_name = products().get(product_code)['product_name']
+      shop_name = shops().get(shop_code)['shop_name']
 
     except:
-      return 'Invalid product or shop code'
+      return 'Invalid product or shop code\n', sys.exc_info()[1]
 
     message = 'Thanks for your input! You sent %s @ %s' % (product_name, shop_name)
     
@@ -40,8 +40,8 @@ class handler:
     record = {
       'customer_number' : data.sender,
       'timestamp'       : data.timestamp,
-      'product_name'    : product_name,
-      'shop_name'       : shop_name,
+      'product_code'    : product_code,
+      'shop_code'       : shop_code,
       'notified'        : False
     }
     utils()._persist(record)

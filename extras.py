@@ -2,21 +2,6 @@ import re, requests, json, os
 from pymongo import MongoClient
 from requests import Request, Session
 
-products = {
-              '43298':'Orange Jam',
-              '53264':'Huggies Nappies',
-              '78568':'Coffee Mug',
-              '82584':'Disposable Nakpins L/S',
-              '98997':'Pepsi'
-    }
-
-shops = {
-              '535':'Randburg',
-              '643':'Braamfontein Annex B',
-              '941':'Rosebank',
-              '853':'Linden'
-    }
-
 
 class utils:
   LOGIN = None
@@ -50,7 +35,11 @@ class utils:
 
     # send the request
     s = Session()
-    return s.send(request.prepare())
+
+    try:
+      return s.send(request.prepare())
+    except:
+      return None
 
   def get_credentials(self):
     root = os.path.dirname(__file__)

@@ -28,6 +28,7 @@ class products:
 		try: 
 			return self.product.find_one({'product_code' : product_code})
 		except:
+			print sys.exc_info()[0]
 			return None
 
 	def get_all(self):

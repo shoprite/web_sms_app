@@ -7,6 +7,7 @@ import requests, json
 import admin
 from extras import utils
 import extras
+from admin import products, shops
 
 from paste.fixture import TestApp
 
@@ -117,5 +118,36 @@ class TestHandler:
     record_id = utils()._persist(test_data, 'messages_test')
     assert_is_not_none(record_id)
 
-    
 
+class TestProducts:
+  def test_can_create_product(self):
+    product_code = '00451'
+    product_name = 'Cat Brand Pea Nuts Paste'
+    p = products().add(product_code, product_name)
+
+    assert_is_not_none(p)
+
+  def test_can_retrieve_product_by_product_code(self):
+    product_code = '00652'
+    product_name = 'Foolscap L/S'
+    products().add(product_code, product_name)
+
+    get_product = products().get('00652')
+    assert_equal(get_product['product_code'], '00652')
+
+
+class TestShops:
+  def test_can_create_shop(self):
+    shop_code = '456'
+    shop_name = 'Rosebank Mall'
+    s = shops().add(shop_code, shop_name)
+
+    assert_is_not_none(s)
+
+  def test_can_retrieve_shop_by_shop_code(self):
+    shop_code = '865'
+    shop_name = 'Braamfontein Annex B'
+    shops().add(shop_code, shop_name)
+
+    get_shop = shops().get('865')
+    assert_equal(get_shop['shop_code'], '865')

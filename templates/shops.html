@@ -1,0 +1,26 @@
+{% extends 'base.html' %} 
+{% block heading %}Shops{% endblock %}
+{% block content %} 
+
+<form method='POST'>
+	<table class="table table-bordered table-striped table-hover">
+		<tr>
+			<th>Shop Code</th>
+			<th>Shop Name</th>
+			<th></th>
+		</tr>
+		<tr>
+			<td><input type='text' name = 'shop_code' maxlength=5 class='span3'/></td>
+			<td><input type='text' name = 'shop_name' maxlength=30 class='span10'/></td> 
+			<td><input type='submit' name = "Add"></td>
+		</tr>
+	{% for record in records %}
+		<tr>
+			<td>{{ record.shop_code }}</td>
+			<td>{{ record.shop_name }}</td> 
+			<td></td>
+		</tr>
+	{% endfor %} 
+	</table>
+</form>
+{% endblock %}

@@ -6,8 +6,8 @@ from models import products, shops
 
 urls = ('/?', 'index',
 		'/notify/?', 'notify',
-		'/products/?', 'products',
-		'/shops/?', 'shops'
+		'/products/?', products,
+		'/shops/?', shops
 	)
 
 render = render_jinja(

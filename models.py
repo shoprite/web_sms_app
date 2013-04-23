@@ -1,7 +1,11 @@
 from pymongo import MongoClient
 from extras import utils
-import web
+from web.contrib.template import render_jinja
+import web,os
 
+render = render_jinja(
+  os.path.join(os.path.dirname(__file__),'templates'),
+	encoding='utf-8')
 
 class products:
 

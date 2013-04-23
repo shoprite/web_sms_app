@@ -35,32 +35,6 @@ class TestHandler:
   def __stop_server(self):
     del app
 
-  # def setup(self):
-  #   middleware = []
-  #   self.testApp = TestApp(app.wsgifunc(*middleware))
-
-  # def test_get_request(self):
-
-  #   response = self.testApp.get('/?sender=me&text=bleh', headers={'Content-Type': 'application/json'})
-  #   assert_equal(response.status, 200)
-
-  # @with_setup(__start_server, __stop_server)
-  # def test_get_reponse(self):
-  #   r = app.request(data=self.data)
-  #   assert_is_not_none(r.data)
-
-  # @with_setup(__start_server, __stop_server)
-  # def test_receive_request_from_provider(self):
-  #   r = app.request(data=self.data)
-  #   assert_equals(r.status, '200 OK')
-
-
-  # @with_setup(__start_server, __stop_server)
-  # def test_respond_to_request(self):
-  #   r = app.request( data=self.data)
-  #   assert_equal(r.data, 'Thank you for notifying us!')
-
-
   @with_setup(__start_server, __stop_server)
   def test_sms_host_reachable(self):
     req = utils()._send_sms([self.dest], self.msg)
@@ -117,6 +91,7 @@ class TestHandler:
 
     record_id = utils()._persist(test_data, 'messages_test')
     assert_is_not_none(record_id)
+
 
 
 class TestProducts:

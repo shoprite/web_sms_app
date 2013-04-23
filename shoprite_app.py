@@ -1,17 +1,15 @@
 import web, admin, extras
 from extras import utils
+from models import products, shops
 
 urls = (
             '/?', 'handler',
             '/admin', admin.app_admin
             )
-app = web.application(urls, globals()).wsgifunc()
+app = web.application(urls, globals())
 application = app
 
 class handler:        
-
-  
-
   def GET(self):
     data = web.input() # ?sender=0845678910&text=64353264&timestamp=2013-04-17%20203 
     
@@ -30,8 +28,8 @@ class handler:
     shop_name = None
 
     try:
-      product_name = extras.products[product_code]
-      shop_name = extras.shops[shop_code]
+      product_name = products().get(product_code).product_name
+      shop_name = shops().get(shop_code).shop_name
 
     except:
       return 'Invalid product or shop code'

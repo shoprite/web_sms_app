@@ -2,7 +2,7 @@ import web, random, extras, os
 from pymongo import MongoClient
 from web.contrib.template import render_jinja
 from extras import utils
-from models import products, shops
+from models import products, shops, Message
 import json
 
 urls = ('/?', 'index',
@@ -17,13 +17,9 @@ render = render_jinja(
 
 class index:
 	def GET(self):
-		records = self._get_records()
-		return render.index(records=records)
-
-	def _get_records(self):
-		client = MongoClient()
-		db = client.shoprite_db
-		return db.messages.find()
+		all_messages = Message().all()
+		return render.index(messages=all_messages)
+ 
 
 class notify:
 	def GET(self):

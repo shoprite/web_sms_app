@@ -9,13 +9,13 @@
 			<th>Date & Time</th>
 			<th>Notified</th>
 		</tr>
-	{% for record in records %}
-		<tr {% if record.notified %} class="success" {% endif %}>
-			<td>{{ record.customer_number}}</td>
-			<td>{{ record.product_code }}</td>
-			<td>{{ record.shop_code }}</td>
-			<td>{{ record.timestamp }}</td>
-			<td>{{ record.notified }}</td>
+	{% for message in messages %}
+		<tr {% if message.notified %} class="success" {% endif %}>
+			<td>{{ message.customer_number}}</td>
+			<td>{{ message.product_code }}</td>
+			<td>{{ message.shop_code }}</td>
+			<td>{{ message.timestamp }}</td>
+			<td>{{ message.notified }}</td>
 		</tr>
 	{% endfor %} 
 	</table>

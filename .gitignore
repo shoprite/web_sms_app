@@ -1,5 +1,4 @@
 *.pyc
 *.swp
 *.log
-login.cred
-
+credential.py

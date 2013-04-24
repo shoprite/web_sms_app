@@ -1,0 +1,60 @@
+{% extends 'base.html' %} 
+{% block heading %}Customer Messages - Admin{% endblock %}
+{% block content %} 
+
+<style>
+	.no-border td,th{
+		border: 0;
+	}
+</style>
+<form method="POST">
+	<div class = 'offset2'>
+	<table class="table no-border">
+		<tr>
+			<td>Shop Code:</td>
+			<td>
+				<select name='shop_code'  class = 'span12'>
+					{% for shop in shops %}
+						<option value='{{ shop.code }}'>{{ shop.code }} - {{ shop.name }} </option>
+					{% endfor %}
+				</select> 
+			</td>
+		</tr>
+		<tr>
+			<td>Product Code:</td>
+			<td>
+				<select name='product_code' class = 'span12'>
+					{% for product in products %}
+						<option value='{{ product.code }}'>{{ product.code }} - {{ product.name }} </option>
+					{% endfor %}
+				</select> 
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp</td>
+			<td><input type='submit' name='Notify'/></td>
+		</tr>
+	</table>
+</div>
+</form>
+
+
+	<table class="table table-bordered table-striped table-hover">
+		<tr>
+			<th>Customer Number</th>
+			<th>Product</th>
+			<th>Shop</th>
+			<th>Date & Time</th>
+			<th>Notified</th>
+		</tr>
+	{% for message in messages %}
+		<tr {% if message.notified %} class="success" {% endif %}>
+			<td>{{ message.customer_number}}</td>
+			<td>{{ message.product_code }}</td>
+			<td>{{ message.shop_code }}</td>
+			<td>{{ message.timestamp }}</td>
+			<td>{{ message.notified }}</td>
+		</tr>
+	{% endfor %} 
+	</table>
+{% endblock %}

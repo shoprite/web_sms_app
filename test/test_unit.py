@@ -5,8 +5,6 @@ from shoprite_app import app, handler
 import shoprite_app
 import requests, json
 import admin
-from extras import utils
-import extras
 from admin import products, shops
 
 from paste.fixture import TestApp

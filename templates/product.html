@@ -10,14 +10,14 @@
 			<th></th>
 		</tr>
 		<tr>
-			<td><input type='text' name = 'product_code' maxlength=5 class='span3'/></td>
-			<td><input type='text' name = 'product_name' maxlength=30 class='span10'/></td> 
+			<td><input type='text' name = 'code' maxlength=5 class='span3'/></td>
+			<td><input type='text' name = 'name' maxlength=30 class='span10'/></td> 
 			<td><input type='submit' name = "Add"></td>
 		</tr>
 	{% for record in records %}
 		<tr>
-			<td>{{ record.product_code }}</td>
-			<td>{{ record.product_name }}</td> 
+			<td>{{ record.code }}</td>
+			<td>{{ record.name }}</td> 
 			<td></td>
 		</tr>
 	{% endfor %} 

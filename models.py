@@ -7,10 +7,19 @@ render = render_jinja(
   os.path.join(os.path.dirname(__file__),'templates'),
 	encoding='utf-8')
 
-class Model:
-	def __init__(self, db='shoprite_db'):
+class Model(object):
+	client = None
+	db = None
+
+	def __init__(self, db_name='shoprite_db'):
 		self.client = MongoClient()
-		self.db = getattr(self.client, db)
+		self.db = getattr(self.client, db_name)
+
+	def all(self):
+		return getattr(self.db, type(self).__name__).find()
+
+	def _persist(self, data):
+		return getattr(self.db, type(self).__name__).insert(data)
 
 class Message(Model): 
 	customer_number = ''
@@ -18,7 +27,6 @@ class Message(Model):
 	shop_code = ''
 	timestamp = None
 	notified = False
-
 
 	def save(self):
 		try:
@@ -30,73 +38,54 @@ class Message(Model):
 				'notified'			: self.notified
 			}
 
-			return self.db.messages.insert(data)
+			self._persist(data)
+			return self
 		except:
 			print sys.exc_info()[1]
 			return None
 
-	def all(self):
-		return self.db.messages.find() 
+	def fetch_by(self, **kwargs):
+		return getattr(self.db, type(self).__name__).find(kwargs)
 
-class products:
 
-	client = MongoClient()
-	product = client.shoprite_db.products
+class Entity(Model):
 
-	def GET(self):
-		records = self.get_all()
-		return render.products(records=records)
+	def __init__(self, code, name):
+		Model.__init__(self)
+		self.code = code
+		self.name = name
 
-	def add(self, product_code, product_name):
+	def save(self):
 		data = {
-			'product_code' : product_code,
-			'product_name' : product_name
+			'code' : self.code,
+			'name' : self.name
 		}
 
-		return utils()._persist(data, 'products')
+		return self._persist(data)
 
-	def get(self, product_code):
+	def fetch(self):
 		try: 
-			return self.product.find_one({'product_code' : product_code})
+			data = getattr(self.db, type(self).__name__).find_one({'code' : self.code})
+			self.code = data['code']
+			self.name = data['name']
+
+			return self
 		except:
 			print sys.exc_info()[1]
 			return None
 
-	def get_all(self):
-		return self.product.find()
+	def is_valid(self):
+		return self.fetch() is not None
 
-	def POST(self):
-		data = web.input() 
-		self.add(data.product_code, data.product_name)
-	 	raise web.seeother('/products')
+class Product(Entity):
 
-class shops:
+	def __init__(self, code='', name=''):
+		Entity.__init__(self, code, name)
+		
 
-	client = MongoClient()
-	shop = client.shoprite_db.shops
 
-	def GET(self):
-		records = self.get_all()
-		return render.shops(records=records)
+class Shop(Entity):
 
-	def add(self, shop_code, shop_name):
-		data = {
-			'shop_code' : shop_code,
-			'shop_name' : shop_name
-		}
+	def __init__(self, code='', name=''):
+		Entity.__init__(self, code, name)
 
-		return utils()._persist(data, 'shops')
-
-	def get(self, shop_code):
-		try: 
-			return self.shop.find_one({'shop_code' : shop_code})
-		except:
-			return None
-
-	def get_all(self):
-		return self.shop.find()
-
-	def POST(self):
-		data = web.input() 
-		self.add(data.shop_code, data.shop_name)
-	 	raise web.seeother('/shops')

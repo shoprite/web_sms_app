@@ -1,33 +1,24 @@
-import web, random, extras, os
+import os, random, json, web, util, models
 from pymongo import MongoClient
 from web.contrib.template import render_jinja
-from extras import utils
-from models import products, shops, Message
-import json
+from models import Message, Product, Shop
 
-urls = ('/?', 'index',
-		'/notify/?', 'notify',
-		'/products/?', products,
-		'/shops/?', shops
+urls = ('/?', 'AdminMessageController',
+		'/(.*)s/?', 'EntityController'
 	)
 
 render = render_jinja(
   os.path.join(os.path.dirname(__file__),'templates'),
 	encoding='utf-8')
 
-class index:
-	def GET(self):
-		all_messages = Message().all()
-		return render.index(messages=all_messages)
- 
-
-class notify:
+class AdminMessageController:
 	def GET(self):
 		data = {
-			'products' : products().get_all(),
-			'shops'	   : shops().get_all()
+			'products'	: Product().all(),
+			'shops'		: Shop().all(),
+			'messages'	: Message().all()
 		}
-		return render.notify(**data)
+		return render.admin_index(**data)
 
 	def POST(self):
 		data = web.input()
@@ -37,29 +28,40 @@ class notify:
 		return self.send_notification(shop_code, product_code)
 
 	def send_notification(self, shop_code, product_code):
-		client = MongoClient()
+		affected_messages = Message().fetch_by(shop_code=shop_code, product_code=product_code)
 
-		affected_messges = client.shoprite_db.messages.find({'product_code': product_code, 'shop_code': shop_code, 'notified':False})
+		if affected_messages.count() == 0:
+			raise web.seeother("/")
 
-		if affected_messges.count() == 0:
-			raise web.seeother("/notify")
+		product = Product(product_code).fetch()
+		shop = Shop(shop_code).fetch()
 
-		product = products().get(product_code)
-		shop = shops().get(shop_code)
+		loyalty_code = self.generate_loyalty_code() # TODO: need to generate IN loop
+		reply_text = '%s is back in stock @ %s. Your loyalty code is %s' % (product.name, shop.name, loyalty_code)
 
-		loyalty_code = self.generate_loyalty_code() # need to generate IN loop
-		message = '%s is back in stock @ %s. Your loyalty code is %s' % (product['product_name'], shop['shop_name'], loyalty_code)
-		response = utils()._send_sms([m['customer_number'] for m in affected_messges], message )
+		response = util._send_sms([m['customer_number'] for m in affected_messages], reply_text )
 
 		if response is not None:
 			response_list = json.loads(response.content)['results']
 			for r in response_list:
 				if r['status'] == '0':
-					affected_messges.collection.update({'notified': False, 'product_code': product_code, 'shop_code': shop_code , 'customer_number': r['destination']}, {'$set': {'notified': True}})
+					affected_messages.collection.update({'notified': False, 'product_code': product_code, 'shop_code': shop_code , 'customer_number': r['destination']}, {'$set': {'notified': True}})
 		
-		return message
+		return response.content
 
 	def generate_loyalty_code(self):
 		return random.randrange(100000, 999999)
+
+class EntityController:
+	def GET(self, entity_name):
+		records = getattr(models, entity_name.capitalize())().all() # TODO: try-catch - if AttributeError, raise 404
+		return getattr(render, entity_name)(records=records)
+
+	def POST(self, entity_name):
+		data = web.input()
+
+		entity = getattr(models, entity_name.capitalize())(data.code, data.name)
+		entity.save()
+	 	raise web.seeother('/' + entity_name + 's')
 
 app_admin = web.application(urls, locals())
